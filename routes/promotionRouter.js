@@ -1,44 +1,141 @@
 const express = require('express');
+const Promotion = require('../models/promotion');
 const promotionRouter = express.Router();
 
 promotionRouter.route('/')
-.all((req, res, next) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    next();
+.get((req, res, next) => {
+    Promotion.findById(req.params.promotionId)
+    .then(promotion => {
+        if (promotion) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(promotion);
+        } else {
+            err = new Error(`Promotion ${req.params.partnerId} not found`);
+            err.status = 404;
+            return next(err);
+        }
+    })
+    .catch(err => next(err));
 })
-.get((req, res) => {
-    res.end('Will send all the promotions to you');
-})
-.post((req, res) => {
-    res.end(`Will add the promotion: ${req.body.name} with description: ${req.body.description}`);
+.post((req, res, next) => {
+    Promotion.findById(req.params.promotionId)
+    .then(promotion => {
+        if (promotion) {
+            promtion.push(req.body);
+            promotion.save()
+            .then(promotion => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(promotion);
+            })
+            .catch(err => next(err));
+        } else {
+            err = new Error(`Promotion ${req.params.promotionId} not found`);
+            err.status = 404;
+            return next(err);
+        }
+    })
+    .catch(err => next(err));
 })
 .put((req, res) => {
     res.statusCode = 403;
-    res.end('PUT operation not supported on /promotions');
+    res.end(`PUT operation not supported on /promotion/${req.params.promotionId}`);
 })
-.delete((req, res) => {
-    res.end('Deleting all promotions');
+.delete((req, res, next) => {
+    Promotion.findById(req.params.promotionId)
+    .then(promotion => {
+        if (promotion) {
+            for (let i = (promotion.length-1); i >= 0; i--) {
+                promotion.id(promotion.[i]._id).remove();
+            }
+            promotion.save()
+            .then(promotion => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(promotion);
+            })
+            .catch(err => next(err));
+        } else {
+            err = new Error(`Promotion ${req.params.promotionId} not found`);
+            err.status = 404;
+            return next(err);
+        }
+    })
+    .catch(err => next(err));
 });
 
-promotionRouter.route('/:promotionId')
-.all((req, res, next) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    next();
-})
-.get((req, res) => {
-    res.end('Will send this promotion to you');
+promotionRouter.route('/promotions/:promotionId')
+.get((req, res, next) => {
+    Promotion.findById(req.params.promotionId)
+    .then(promotion => {
+        if (promotion && promotion.id(req.params.promotionId)) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(promotion.id(req.params.promotionId));
+        } else if (!promotion) {
+            err = new Error(`Promotion ${req.params.promotionId} not found`);
+            err.status = 404;
+            return next(err);
+        } else {
+            err = new Error(`Promotion ${req.params.promotionId} not found`);
+            err.status = 404;
+            return next(err);
+        }
+    })
+    .catch(err => next(err));
 })
 .post((req, res) => {
-    res.end(`Will add the promotion: ${req.body.name} with description: ${req.body.description}`);
-})
-.put((req, res) => {
     res.statusCode = 403;
-    res.end('PUT operation not supported on /promotions/:promotionId:');
+    res.end(`POST operation not supported on /promotion/${req.params.promotionId}`);
 })
-.delete((req, res) => {
-    res.end('Deleting this promotion');
+.put((req, res, next) => {
+    Promotion.findById(req.params.promotionId)
+    .then(promotion => {
+        if (promotion && promotion.id(req.params.promotionId)) {
+            promotion.save()
+            .then(partner => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(promotion);
+            })
+            .catch(err => next(err));
+        } else if (!promotion) {
+            err = new Error(`Promotion ${req.params.promotionId} not found`);
+            err.status = 404;
+            return next(err);
+        } else {
+            err = new Error(`Promotion with ID#:${req.params.promotionId} not found`);
+            err.status = 404;
+            return next(err);
+        }
+    })
+    .catch(err => next(err));
+})
+.delete((req, res, next) => {
+    Promotion.findById(req.params.promotionId)
+    .then(promotion => {
+        if (promotion && promotion.id(req.params.promotionId)) {
+            promotion.id(req.params.promotionId).remove();
+            promotion.save()
+            .then(promotion => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(promotion);
+            })
+            .catch(err => next(err));
+        } else if (!promotion) {
+            err = new Error(`Promotion ${req.params.promotionId} not found`);
+            err.status = 404;
+            return next(err);
+        } else {
+            err = new Error(`Promotion with ID#: ${req.params.promotionId} not found`);
+            err.status = 404;
+            return next(err);
+        }
+    })
+    .catch(err => next(err));
 });
+
 
 module.exports = promotionRouter;
