@@ -47,7 +47,7 @@ partnerRouter.route('/')
     .then(partner => {
         if (partner) {
             for (let i = (partner.length-1); i >= 0; i--) {
-                partner.id(partner.[i]._id).remove();
+                partner.id(partner[i]._id).remove();
             }
             partner.save()
             .then(partner => {
@@ -67,7 +67,7 @@ partnerRouter.route('/')
 
 partnerRouter.route('/partners/:partnerId')
 .get((req, res, next) => {
-    Partner.findById(req.params.campsiteId)
+    Partner.findById(req.params.partnerId)
     .then(partner => {
         if (partner && partner.id(req.params.partnerId)) {
             res.statusCode = 200;
@@ -113,8 +113,8 @@ partnerRouter.route('/partners/:partnerId')
     .catch(err => next(err));
 })
 .delete((req, res, next) => {
-    Partner.findById(req.params.campsiteId)
-    .then(partner=> {
+    Partner.findById(req.params.partnerId)
+    .then(partner => {
         if (partner && partner.id(req.params.partnerId)) {
             partner.id(req.params.partnerId).remove();
             partner.save()

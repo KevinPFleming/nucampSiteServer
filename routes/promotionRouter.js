@@ -11,7 +11,7 @@ promotionRouter.route('/')
             res.setHeader('Content-Type', 'application/json');
             res.json(promotion);
         } else {
-            err = new Error(`Promotion ${req.params.partnerId} not found`);
+            err = new Error(`Promotion ${req.params.promotionId} not found`);
             err.status = 404;
             return next(err);
         }
@@ -22,7 +22,7 @@ promotionRouter.route('/')
     Promotion.findById(req.params.promotionId)
     .then(promotion => {
         if (promotion) {
-            promtion.push(req.body);
+            promotion.push(req.body);
             promotion.save()
             .then(promotion => {
                 res.statusCode = 200;
@@ -47,7 +47,7 @@ promotionRouter.route('/')
     .then(promotion => {
         if (promotion) {
             for (let i = (promotion.length-1); i >= 0; i--) {
-                promotion.id(promotion.[i]._id).remove();
+                promotion.id(promotion[i]._id).remove();
             }
             promotion.save()
             .then(promotion => {
