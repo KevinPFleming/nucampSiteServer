@@ -1,6 +1,7 @@
 const express = require('express');
 const Partner = require('../models/partner');
 const partnerRouter = express.Router();
+const authenticate = require('../authenticate');
 
 partnerRouter.route('/')
 .get((req, res, next) => {
@@ -18,7 +19,7 @@ partnerRouter.route('/')
     })
     .catch(err => next(err));
 })
-.post((req, res, next) => {
+.post(authenticate.verifyUser,(req, res, next) => {
     Partner.findById(req.params.partnerId)
     .then(partner => {
         if (partner) {
@@ -38,11 +39,11 @@ partnerRouter.route('/')
     })
     .catch(err => next(err));
 })
-.put((req, res) => {
+.put(authenticate.verifyUser,(req, res) => {
     res.statusCode = 403;
     res.end(`PUT operation not supported on /partner/${req.params.partnerId}`);
 })
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser,(req, res, next) => {
     Partner.findById(req.params.partnerId)
     .then(partner => {
         if (partner) {
@@ -85,11 +86,11 @@ partnerRouter.route('/partners/:partnerId')
     })
     .catch(err => next(err));
 })
-.post((req, res) => {
+.post(authenticate.verifyUser,(req, res) => {
     res.statusCode = 403;
     res.end(`POST operation not supported on /partners/${req.params.partnerId}`);
 })
-.put((req, res, next) => {
+.put(authenticate.verifyUser,(req, res, next) => {
     Partner.findById(req.params.partnerId)
     .then(partner => {
         if (partner && partner.id(req.params.partnerId)) {
@@ -112,7 +113,7 @@ partnerRouter.route('/partners/:partnerId')
     })
     .catch(err => next(err));
 })
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser,(req, res, next) => {
     Partner.findById(req.params.partnerId)
     .then(partner => {
         if (partner && partner.id(req.params.partnerId)) {
