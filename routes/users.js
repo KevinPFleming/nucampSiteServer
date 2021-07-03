@@ -3,6 +3,7 @@ const User = require('../models/user');
 const router = express.Router();
 const passport = require('passport');
 const authenticate = require('../authenticate');
+const user = require('../models/user');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -60,6 +61,17 @@ router.get('/logout', (req, res, next) => {
     err.status = 401;
     return next(err);
   }
-})
+});
+
+router.get('/users', (req, res, next) => {
+  if (req.user.admin) {
+    res.json(user);
+    return next();
+  } else {
+    const err = new Error('You are not an authorized admin');
+    err.status = 401;
+    return next(err);
+  }
+});
 
 module.exports = router;

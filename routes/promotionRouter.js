@@ -19,7 +19,7 @@ promotionRouter.route('/')
     })
     .catch(err => next(err));
 })
-.post(authenticate.verifyUser,(req, res, next) => {
+.post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Promotion.findById(req.params.promotionId)
     .then(promotion => {
         if (promotion) {
@@ -43,7 +43,7 @@ promotionRouter.route('/')
     res.statusCode = 403;
     res.end(`PUT operation not supported on /promotion/${req.params.promotionId}`);
 })
-.delete(authenticate.verifyUser,(req, res, next) => {
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Promotion.findById(req.params.promotionId)
     .then(promotion => {
         if (promotion) {
@@ -90,7 +90,7 @@ promotionRouter.route('/promotions/:promotionId')
     res.statusCode = 403;
     res.end(`POST operation not supported on /promotion/${req.params.promotionId}`);
 })
-.put(authenticate.verifyUser,(req, res, next) => {
+.put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Promotion.findById(req.params.promotionId)
     .then(promotion => {
         if (promotion && promotion.id(req.params.promotionId)) {
@@ -113,7 +113,7 @@ promotionRouter.route('/promotions/:promotionId')
     })
     .catch(err => next(err));
 })
-.delete(authenticate.verifyUser,(req, res, next) => {
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Promotion.findById(req.params.promotionId)
     .then(promotion => {
         if (promotion && promotion.id(req.params.promotionId)) {
