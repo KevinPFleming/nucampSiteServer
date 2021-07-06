@@ -234,6 +234,7 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
                 campsite.comments.id(req.params.commentId).text = req.body.text;
             }
             campsite.comments.id(req.params.commentId).remove()
+            campsite.save()
             .catch(err => next(err));
         } else {
             const err = new Error('You are not authorized');
@@ -252,6 +253,8 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
     })
     .catch(err => next(err));
 })
+
+module.exports = campsiteRouter;
 //         if (campsite && campsite.comments.id(req.params.commentId)) {
 //             campsite.comments.id(req.params.commentId).remove();
 //             campsite.save()
@@ -273,5 +276,3 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
 //     })
 //     .catch(err => next(err));
 // });
-
-module.exports = campsiteRouter;

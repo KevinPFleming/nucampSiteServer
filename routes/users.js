@@ -1,5 +1,4 @@
 const express = require('express');
-const User = require('../models/user');
 const router = express.Router();
 const passport = require('passport');
 const authenticate = require('../authenticate');
@@ -65,6 +64,8 @@ router.get('/logout', (req, res, next) => {
 
 router.get('/users', (req, res, next) => {
   if (req.user.admin) {
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
     res.json(user);
     return next();
   } else {
