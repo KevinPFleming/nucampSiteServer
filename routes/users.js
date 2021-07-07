@@ -6,11 +6,11 @@ const user = require('../models/user');
 const cors = require('./cors');
 
 /* GET users listing. */
-router.get(cors.corsWithOptions, '/', function(req, res, next) {
+router.get('/', cors.corsWithOptions, function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.post(cors.corsWithOptions, '/signup', (req, res) => {
+router.post('/signup', cors.corsWithOptions, (req, res) => {
   User.register(
       new User({username: req.body.username}),
       req.body.password,
@@ -44,14 +44,14 @@ router.post(cors.corsWithOptions, '/signup', (req, res) => {
   );
 });
 
-router.post(cors.corsWithOptions,'/login', passport.authenticate('local'), (req, res) => {
+router.post('/login', cors.corsWithOptions, passport.authenticate('local'), (req, res) => {
     const token = authenticate.getToken({_id: req.user._id});
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json({sucess: true, token: token, status: 'You are successfully logged in'});
 });
 
-router.get(cors.corsWithOptions, '/logout', (req, res, next) => {
+router.get('/logout', cors.corsWithOptions, (req, res, next) => {
   if (req.session) {
     req.session.destroy();
     res.clearCookie('session-id');
